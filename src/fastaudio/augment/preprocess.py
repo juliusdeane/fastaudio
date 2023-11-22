@@ -1,6 +1,10 @@
 import torch
 from enum import Enum
 from fastai.imports import math, np
+
+# Quick&Dirty patch to survive to librosa vs fastaudio
+np.complex = complex
+
 from fastcore.transform import Transform
 from librosa.effects import split
 from scipy.signal import resample_poly
