@@ -176,7 +176,7 @@ def show_audio_signal(ai, ctx, ax=None, title="", **kwargs):
         #                          label=None, transpose=False, ax=None, x_axis= < DEPRECATED
         # parameter >, ** kwargs)
         if is_waveshow is True:
-            waveshow(x=channel.cpu().numpy(), sr=ai.sr, ax=ia, **kwargs)
+            waveshow(y=channel.cpu().numpy(), sr=ai.sr, ax=ia, **kwargs)
         else:
             waveplot(channel.cpu().numpy(), ai.sr, ax=ia, **kwargs)
 
