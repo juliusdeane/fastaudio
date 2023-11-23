@@ -16,6 +16,8 @@ from IPython.display import Audio, display
 # waveplot or waveplot = waveshow.
 try:
     from librosa.display import waveplot
+    is_waveplot = True
+    is_waveshow = False
 except:
     try:
         from librosa.display import waveshow
@@ -23,6 +25,9 @@ except:
         raise Exception(e)
     finally:
         waveplot = waveshow
+        is_waveplot = False
+        is_waveshow = True
+
 
 from os import path
 
@@ -163,7 +168,18 @@ def show_audio_signal(ai, ctx, ax=None, title="", **kwargs):
     for i, channel in enumerate(ai):
         # x_start, y_start, x_lenght, y_lenght, all in percent
         ia = ax.inset_axes((i / ai.nchannels, 0.2, 1 / ai.nchannels, 0.7))
-        waveplot(channel.cpu().numpy(), ai.sr, ax=ia, **kwargs)
+
+        # ORIGINAL: waveplot(channel.cpu().numpy(), ai.sr, ax=ia, **kwargs)
+        # if it is waveshow, make sure positional args are correct.
+        # waveshow(x=channel.cpu().numpy(), sr=ai.sr, ax=ia, **kwargs)
+        # librosa.display.waveshow(y, *, sr=22050, max_points=11025, axis='time', offset=0.0, marker='', where='post',
+        #                          label=None, transpose=False, ax=None, x_axis= < DEPRECATED
+        # parameter >, ** kwargs)
+        if is_waveshow is True:
+            waveshow(x=channel.cpu().numpy(), sr=ai.sr, ax=ia, **kwargs)
+        else:
+            waveplot(channel.cpu().numpy(), ai.sr, ax=ia, **kwargs)
+
         ia.set_title(f"Channel {i}")
     ax.set_title(title)
 
