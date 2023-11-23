@@ -12,7 +12,18 @@ from fastcore.dispatch import typedispatch
 from fastcore.meta import delegates
 from fastcore.utils import ifnone
 from IPython.display import Audio, display
-from librosa.display import waveplot
+# DIRTY PATCH: to avoid conflicts with different versions of librosa.
+# waveplot or waveplot = waveshow.
+try:
+    from librosa.display import waveplot
+except:
+    try:
+        from librosa.display import waveshow
+    except Exception as e:
+        raise Exception(e)
+    finally:
+        waveplot = waveshow
+
 from os import path
 
 audio_extensions = tuple(
